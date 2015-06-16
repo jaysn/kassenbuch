@@ -8,34 +8,30 @@
 //Aktuelle daten Ausgeben
 include("config.php");
 
-$e_query = 'SELECT * FROM einstellungen'; 
-$e_result = mysql_query($e_query); // Wobei $link die mit mysqli_connect() aufgerufene Verbindung ist 
-$e_row = mysql_fetch_assoc($e_result); 
+//Einstellung laden
+$oStmtSettings = $oDb->prepare( 'SELECT * FROM einstellungen' ); 
+$e_ergebnis = $oStmtSettings->execute();
+$oSettings = $oStmtSettings->fetchObject(); 
 
-$eintraege_pro_seite = $e_row['eintraege'];
-$textbegrenzer = $e_row['textbegrenzer'];
-$betragseinheit = $e_row['betragseinheit'];
+$eintraege_pro_seite = $oSettings->eintraege;
+$textbegrenzer = $oSettings->textbegrenzer;
+$betragseinheit = $oSettings->betragseinheit;
 
-
-if ($e_row['datensaetze'] == 1)
-{
+if( $oSettings->datensaetze == 1 ) {
 	$datensaetze_1 = "selected";
 	$datensaetze_2 = "";
 	$datensaetze_3 = "checked";
 }
-else
-{
+else {
 	$datensaetze_1 = "";
 	$datensaetze_2 = "selected";
 }
 
-if ($e_row['sortierung'] == 1)
-{
+if( $oSettings->sortierung == 1 ) {
 	$selected_1 = "selected";
 	$selected_2 = "";
 }
-else 
-{
+else {
 	$selected_1 = "";
 	$selected_2 = "selected";
 }
@@ -86,7 +82,7 @@ $(document).ready( function(){
  			</td>
  		</tr>
  		<tr>
- 			<td style='border-right: 1px solid #d8d8d8;'>Sortierung der Datensätze:</td><td>
+ 			<td style="border-right: 1px solid #d8d8d8;">Sortierung der Datensätze:</td><td>
  				
  			<select name="sortierung" class="select">
   			<option value="neuste" <?php echo $selected_1; ?>>Abst.</option>
@@ -97,7 +93,7 @@ $(document).ready( function(){
  		</tr>
  		
  		<tr>
- 			<td style='border-right: 1px solid #d8d8d8;'>Passwort &auml;ndern:</td>
+ 			<td style="border-right: 1px solid #d8d8d8;">Passwort ändern:</td>
  			<td>
  			<a href="?page=pwaendern">setzen</a>
 			</td>

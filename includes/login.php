@@ -12,35 +12,32 @@ session_start();
 $_SESSION['angemeldet'] = false;
  
 // Wurde das Formular abgeschickt?
-if (isset( $_POST['login'] ))
-{
-	 
-	include("../config.php");
+if( isset( $_POST['login'] ) ) {
+	include( kPATH . 'config.php' );
 
-	$abfrage = "SELECT passwort FROM einstellungen";
-	$ergebnis = mysql_query($abfrage); 
-	$row = mysql_fetch_assoc($ergebnis); 
+	$oAbfrage = $oDb->prepare( 'SELECT passwort FROM einstellungen' );
+	
+	$ergebnis = $oAbfrage->execute(); 
+	$row = $oAbfrage->fetchObject(); 
 
 	//Variablen
-	$passwort = $row['passwort'];
+	$passwort = $row->passwort;
    
     // Benutzereingabe mit Zugangsdaten vergleichen
-    if ($passwort == md5( $_POST['passwort'] ))
-    {
+    if( $passwort == md5( $_POST['passwort'] ) ) {
         // Wenn die Anmeldung korrekt war Session Variable setzen
         // und auf die geheime Seite weiterleiten
-        $_SESSION["angemeldet"] = TRUE; 
-        header( 'location: ../index.php' );
+        $_SESSION['angemeldet'] = true; 
+        header( 'location: ../index.php', true, 301 );
         exit;
     }
-    else
-    {
+    else {
         // Wenn die Anmeldung fehlerhaft war, Fehlermeldung setzen
-        header( 'location: ../index.php' );
-
+        header( 'location: ../index.php', true, 301 );
     }
 }
- 
+
+
 ?>
 <br /><div id="login">
 <form id="loginform" method="post" action="includes/login.php">

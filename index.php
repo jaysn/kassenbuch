@@ -6,26 +6,27 @@
 /*---------------------------*/
 
 session_start();
+define( 'kCWD', dirname( __FILE__ ) );
+define( 'kPATH', kCWD . DIRECTORY_SEPARATOR );
+define( 'kINC', kPATH . 'includes' . DIRECTORY_SEPARATOR );
 
 //Erstelle Struktur
-include("includes/header.html");
+include( kINC . 'header.html' );
 
 //Prüfe, ob install.php vorhanden ist
-if(file_exists("install.php")) 
-{ 
-	echo "<div id='meldung'>1. Geben Sie Ihre Daten in die config.php ein.
+if( file_exists( kPATH . 'install.php' ) ) { 
+	echo '<div id="meldung">1. Geben Sie Ihre Daten in die config.php ein.
 		  <br>2. Führen Sie die install.php aus.
-		  <br>3. Löschen sie die install.php!</div>"; 
-	exit(); 
+		  <br>3. Löschen sie die install.php!</div>';
+	exit();
 }
 
-if (!isset($_SESSION['angemeldet']) || !$_SESSION['angemeldet']) 
-{
-	include("includes/login.php"); 
+if( !isset( $_SESSION['angemeldet'] ) || !$_SESSION['angemeldet'] ) {
+	include( kINC . 'login.php' ); 
 	exit;
 }
 
-include("inhalt.php"); 
+include( kPATH . 'inhalt.php' ); 
 
-include("includes/footer.html");
+include( kINC . 'footer.html' );
 ?>

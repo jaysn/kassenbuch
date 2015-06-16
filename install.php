@@ -6,7 +6,7 @@
 /*---------------------------*/
 
 // Datenbank-Verbindung herstellen
-require_once ('config.php');
+require_once( dirname( __FILE__ ) . DIRECTORY_SEPARATOR . 'config.php' );
  
 //Fülle Datenbank, Standard Passwort: Test
 $sql1 = "
@@ -17,7 +17,7 @@ $sql1 = "
   		`anzahl` int(3) NOT NULL,
   		`gesamt` varchar(6) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   		PRIMARY KEY (`id`)
-		) ENGINE=MyISAM;
+		);
     ";
 	
 $sql2 = "
@@ -28,7 +28,7 @@ $sql2 = "
   		`datensaetze` int(1) NOT NULL,
   		`textbegrenzer` int(2) NOT NULL,
   		`passwort` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL
-		) ENGINE=MyISAM;
+		);
 	";
 
 $sql3 = "
@@ -36,13 +36,15 @@ $sql3 = "
 		(0, 'Euro', 10, 1, 10, '81dc9bdb52d04dc20036dbd8313ed055');
 	";
 	
- 
-// MySQL-Anweisung ausführen lassen
-$db_erg = mysql_query($sql1) && mysql_query($sql2) && mysql_query($sql3)
-  or die("Anfrage fehlgeschlagen: " . mysql_error());
-  
-  if ($sql1 && $sql2 && $sql3 == TRUE){
-  	echo "Installation erfolgreicht, bitte loeschen Sie die install.php - Datei";
-  }
+$nBetraege = $oDb->exec( $sql1 );
+$nSettingsInit = $oDb->exec( $sql2 );
+if( $nSettingsInit !== false ) {
+	$nFillSettings = $oDb->exec( $sql3 );
+}
 
-?>
+if( !( ( $nBetraege >= 0 ) && ( $nSettingsInit >= 0 ) && ( $nFillSettings ) > 0 ) ) {
+	die("Anfrage fehlgeschlagen: " . print_r( $oDb->errorInfo, true ) );
+}
+else {
+	echo "Installation erfolgreicht, bitte loeschen Sie die install.php - Datei";
+}
